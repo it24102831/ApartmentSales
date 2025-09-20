@@ -1,0 +1,192 @@
+```
+ApartmentSales Enhanced Entity-Relationship (EER) Diagram
+===========================================================
+
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   LOCATIONS     │    │ BUILDING_COMPLEXES│    │ PROPERTY_TYPES  │
+├─────────────────┤    ├──────────────────┤    ├─────────────────┤
+│ location_id (PK)│    │ complex_id (PK)  │    │ type_id (PK)    │
+│ country         │    │ complex_name     │    │ type_name       │
+│ state_province  │    │ location_id (FK) │    │ bedrooms        │
+│ city            │    │ developer_name   │    │ bathrooms       │
+│ district        │    │ construction_year│    │ description     │
+│ street_address  │    │ total_floors     │    └─────────────────┘
+│ postal_code     │    │ total_units      │              │
+│ latitude        │    │ amenities        │              │
+│ longitude       │    │ description      │              │
+│ created_at      │    │ status           │              │
+│ updated_at      │    │ created_at       │              │
+└─────────────────┘    │ updated_at       │              │
+          │            └──────────────────┘              │
+          │                      │                       │
+          │ 1:n                  │ 1:n                   │ 1:n
+          │                      │                       │
+          └──────────────────────┼───────────────────────┘
+                                 │
+                        ┌─────────────────┐
+                        │   APARTMENTS    │
+                        ├─────────────────┤
+                        │ apartment_id(PK)│
+                        │ complex_id (FK) │
+                        │ type_id (FK)    │
+                        │ unit_number     │
+                        │ floor_number    │
+                        │ square_footage  │
+                        │ balcony_area    │
+                        │ parking_spaces  │
+                        │ storage_included│
+                        │ furnishing_status│
+                        │ facing_direction│
+                        │ current_price   │
+                        │ original_price  │
+                        │ status          │
+                        │ listing_date    │
+                        │ description     │
+                        │ created_at      │
+                        │ updated_at      │
+                        └─────────────────┘
+                                 │
+                    ┌────────────┼────────────┐
+                    │            │            │
+               ┌─────────────┐   │   ┌─────────────┐
+               │  FEATURES   │   │   │ APARTMENT_  │
+               ├─────────────┤   │   │ FEATURES    │
+               │feature_id(PK)│   │   ├─────────────┤
+               │feature_name │   │   │apartment_id │
+               │feature_cat. │   │   │ (FK)        │
+               │description  │   │   │feature_id   │
+               │created_at   │   │   │ (FK)        │
+               └─────────────┘   │   │feature_value│
+                       │         │   └─────────────┘
+                       └─────────┼─────────┘
+                              m:n│
+                                 │
+┌─────────────────┐             │             ┌─────────────────┐
+│   CUSTOMERS     │             │             │     AGENTS      │
+├─────────────────┤             │             ├─────────────────┤
+│ customer_id (PK)│             │             │ agent_id (PK)   │
+│ first_name      │             │             │ first_name      │
+│ last_name       │             │             │ last_name       │
+│ email           │             │             │ email           │
+│ phone           │             │             │ phone           │
+│ date_of_birth   │             │             │ license_number  │
+│ nationality     │             │             │ license_expiry  │
+│ preferred_contact│             │             │ commission_rate │
+│ budget_min      │             │             │ specialization  │
+│ budget_max      │             │             │ hire_date       │
+│ preferred_loc(FK)│             │             │ status          │
+│ registration_dt │             │             │ manager_id (FK) │
+│ status          │             │             │ created_at      │
+│ notes           │             │             │ updated_at      │
+│ created_at      │             │             └─────────────────┘
+│ updated_at      │             │                       │
+└─────────────────┘             │                       │ self-ref
+          │                     │                       │ (manager)
+          │ 1:n                 │                       │
+          │              ┌─────────────────┐            │
+          │              │     SALES       │            │
+          │              ├─────────────────┤            │
+          └──────────────┤ sale_id (PK)    │            │
+                         │ apartment_id(FK)├────────────┘
+                         │ customer_id (FK)│            │
+                         │ agent_id (FK)   ├────────────┘
+                         │ sale_price      │ n:1
+                         │ commission_amt  │
+                         │ sale_date       │
+                         │ contract_date   │
+                         │ closing_date    │
+                         │ sale_status     │
+                         │ payment_method  │
+                         │ down_payment    │
+                         │ mortgage_amount │
+                         │ financing_bank  │
+                         │ notes           │
+                         │ created_at      │
+                         │ updated_at      │
+                         └─────────────────┘
+                                  │
+                                  │ 1:n
+                                  │
+                         ┌─────────────────┐
+                         │ PAYMENT_SCHEDULE│
+                         ├─────────────────┤
+                         │ payment_id (PK) │
+                         │ sale_id (FK)    │
+                         │ installment_num │
+                         │ due_date        │
+                         │ amount          │
+                         │ payment_date    │
+                         │ payment_status  │
+                         │ payment_method  │
+                         │ reference_number│
+                         │ notes           │
+                         │ created_at      │
+                         │ updated_at      │
+                         └─────────────────┘
+
+┌─────────────────┐                         ┌─────────────────┐
+│   INQUIRIES     │                         │    VIEWINGS     │
+├─────────────────┤                         ├─────────────────┤
+│ inquiry_id (PK) │                         │ viewing_id (PK) │
+│ customer_id(FK) ├─────────────────────────┤ inquiry_id (FK) │
+│ apartment_id(FK)│                         │ apartment_id(FK)│
+│ agent_id (FK)   │                         │ customer_id(FK) │
+│ inquiry_type    │                         │ agent_id (FK)   │
+│ inquiry_date    │                         │ scheduled_dt    │
+│ status          │                         │ actual_dt       │
+│ notes           │                         │ duration_min    │
+│ follow_up_date  │                         │ viewing_status  │
+│ created_at      │                         │ customer_feedback│
+│ updated_at      │                         │ interest_level  │
+└─────────────────┘                         │ notes           │
+          │                                 │ created_at      │
+          │ 1:n                             │ updated_at      │
+          └─────────────────────────────────┴─────────────────┘
+
+Relationship Cardinalities:
+═══════════════════════════
+
+• locations (1) ──→ (n) building_complexes
+• locations (1) ──→ (n) customers (preferred_location)
+• building_complexes (1) ──→ (n) apartments
+• property_types (1) ──→ (n) apartments
+• apartments (n) ──→ (n) features (through apartment_features)
+• apartments (1) ──→ (n) sales
+• apartments (1) ──→ (n) inquiries
+• apartments (1) ──→ (n) viewings
+• customers (1) ──→ (n) sales
+• customers (1) ──→ (n) inquiries
+• customers (1) ──→ (n) viewings
+• agents (1) ──→ (n) sales
+• agents (1) ──→ (n) inquiries
+• agents (1) ──→ (n) viewings
+• agents (1) ──→ (n) agents (self-referencing: manager_id)
+• sales (1) ──→ (n) payment_schedule
+• inquiries (1) ──→ (n) viewings
+
+Key Design Features:
+═══════════════════
+
+✓ Normalized design (3NF) reduces data redundancy
+✓ Comprehensive indexing for optimal query performance
+✓ Flexible location hierarchy supports global operations
+✓ Many-to-many apartment-features relationship
+✓ Complete sales pipeline tracking (inquiry → viewing → sale)
+✓ Payment schedule supports various payment methods
+✓ Agent hierarchy supports management structures
+✓ Status fields enable workflow management
+✓ Audit fields (created_at, updated_at) for data tracking
+✓ Soft delete capabilities through status fields
+
+Business Rules Enforced:
+═══════════════════════
+
+• One apartment can only have one completed sale
+• Unique apartment unit numbers within each building complex
+• Unique customer email addresses and agent license numbers
+• Commission amounts calculated from sale price and agent rate
+• Payment schedules must sum to total sale price
+• Viewings must be associated with prior inquiries
+• Agents can manage other agents (hierarchical structure)
+• Referential integrity maintained across all relationships
+```
